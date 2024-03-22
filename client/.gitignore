@@ -1,0 +1,25 @@
+# Dependency directories
+/node_modules
+
+# Build artifacts
+/build
+/dist
+
+# Environment variables
+.env
+
+# IDE and editor files
+/.vscode
+/.idea
+*.iml
+*.ipr
+*.iws
+
+# Logs
+/logs
+
+# Testing artifacts
+/coverage
+
+# Miscellaneous
+.DS_Store

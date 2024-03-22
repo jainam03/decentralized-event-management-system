@@ -1,0 +1,32 @@
+# Truffle build directory
+/build/
+
+# Truffle artifacts
+/contracts/artifacts/
+
+# Truffle test coverage
+/coverage/
+
+# Truffle development network artifacts
+/network/
+
+# Truffle migration scripts
+/migrations/
+
+# Truffle build artifacts
+/build/
+
+# Truffle test reports
+/test-report/
+
+# Truffle development logs
+/logs/
+
+# Truffle configuration file
+/truffle-config.js
+
+# Truffle development network configuration
+/truffle.js
+
+# Truffle development network private keys
+/.secret
