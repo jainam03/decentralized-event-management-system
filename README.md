@@ -22,7 +22,16 @@ List any prerequisites or dependencies required to run the project, such as Node
 
 ### Installation
 
-Provide step-by-step instructions on how to install and set up the project. Include any necessary commands or configurations.
+- cd client
+- npm install
+- npm install web3
+
+- cd truffle
+- truffle compile
+- truffle migrate 
+
+- cd client
+- npm start
 
 ### Configuration
 
