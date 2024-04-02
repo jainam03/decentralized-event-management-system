@@ -25,14 +25,14 @@ List any prerequisites or dependencies required to run the project, such as Node
 - cd client
 - npm install
 - npm install web3
-
+<br>
 - cd truffle
 - truffle compile
 - truffle migrate 
-
+<br>
 - cd client
 - npm start
-
+<br>
 ### Configuration
 
 Explain any configuration options or environment variables that need to be set up for the project.
