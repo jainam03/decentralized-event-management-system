@@ -33,3 +33,6 @@ coverage/
 # Miscellaneous
 .DS_Store
 Thumbs.db
+
+# add video files to gitignore
+*.mp4
