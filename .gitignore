@@ -36,3 +36,5 @@ Thumbs.db
 
 # add video files to gitignore
 *.mp4
+
+src/contracts/
