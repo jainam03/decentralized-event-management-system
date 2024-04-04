@@ -124,28 +124,28 @@ function App() {
   };
 
   return (
-    <div className="App bg-gray-200 min-h-screen py-12 px-4">
-      <h1 className="text-3xl font-bold text-center mb-8">Event Management DApp</h1>
-      <div className="createevt-container bg-white rounded-md shadow-md p-6 mb-8">
-        <h2 className="text-lg font-semibold mb-4">Create Event</h2>
-        <input className="input-field mb-4" type="text" placeholder="Event Name" onChange={(e) => setEventName(e.target.value)} />
-        <input className="input-field mb-4" type="datetime-local" onChange={(e) => setEventDate(e.target.value)} />
-        <input className="input-field mb-4" type="number" pattern='\d*' placeholder="Price (in Wei)" onChange={(e) => setEventPrice(e.target.value)} />
-        <input className="input-field mb-4" type="number" pattern='\d*' placeholder="Ticket Count" onChange={(e) => setTicketCount(e.target.value)} />
-        <button className="btn-primary" onClick={createEvent}>Create Event</button>
+    <div className="App ">
+      <h1 className="">Event Management DApp</h1>
+      <div className="createevt-container">
+        <h2 className="">Create Event</h2>
+        <input className="" type="text" placeholder="Event Name" onChange={(e) => setEventName(e.target.value)} />
+        <input className="" type="datetime-local" onChange={(e) => setEventDate(e.target.value)} />
+        <input className="" type="number" pattern='\d*' placeholder="Price (in Wei)" onChange={(e) => setEventPrice(e.target.value)} />
+        <input className="" type="number" pattern='\d*' placeholder="Ticket Count" onChange={(e) => setTicketCount(e.target.value)} />
+        <button className="" onClick={createEvent}>Create Event</button>
       </div>
-      <div className="buyticket-container bg-white rounded-md shadow-md p-6 mb-8">
-        <h2 className="text-lg font-semibold mb-4">Buy Ticket</h2>
-        <input className="input-field mb-4" type="number" placeholder="Event ID" onChange={handleEventIdChange} />
-        <input className="input-field mb-4" type="number" placeholder="Quantity" onChange={handleTicketQuantityChange} />
-        <button className="btn-primary" onClick={buyTicket}>Buy Ticket</button>
+      <div className="buyticket-container ">
+        <h2 className="">Buy Ticket</h2>
+        <input className="" type="number" placeholder="Event ID" onChange={handleEventIdChange} />
+        <input className="" type="number" placeholder="Quantity" onChange={handleTicketQuantityChange} />
+        <button className="" onClick={buyTicket}>Buy Ticket</button>
       </div>
-      <div className="transfer-container bg-white rounded-md shadow-md p-6">
-        <h2 className="text-lg font-semibold mb-4">Transfer Ticket</h2>
-        <input className="input-field mb-4" type="number" placeholder="Event ID" onChange={handleEventIdChange} />
-        <input className="input-field mb-4" type="number" placeholder="Quantity" onChange={handleTicketQuantityChange} />
-        <input className="input-field mb-4" type="text" placeholder="Transfer To Address" onChange={handleTransferToChange} />
-        <button className="btn-primary" onClick={transferTicket}>Transfer Ticket</button>
+      <div className="transfer-container">
+        <h2 className="">Transfer Ticket</h2>
+        <input className="" type="number" placeholder="Event ID" onChange={handleEventIdChange} />
+        <input className="" type="number" placeholder="Quantity" onChange={handleTicketQuantityChange} />
+        <input className="" type="text" placeholder="Transfer To Address" onChange={handleTransferToChange} />
+        <button className="" onClick={transferTicket}>Transfer Ticket</button>
       </div>
     </div>
   );
