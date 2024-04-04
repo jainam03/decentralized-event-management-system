@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Web3 from 'web3';
 import EventContract from './contracts/EventContract.json';
 import './styles.css';
+import 'tailwindcss/tailwind.css';
 
 function App() {
   const [web3, setWeb3] = useState(null);
@@ -25,6 +26,7 @@ function App() {
           setWeb3(web3);
         } catch (error) {
           console.error('User denied account access');
+          alert("User denied access")
         }
       }
       else {
@@ -59,6 +61,7 @@ function App() {
       const parsedPrice = isNaN(eventPrice) || eventPrice.trim() === '' ? NaN : parseInt(eventPrice);
       const parsedCount = isNaN(ticketCount) || ticketCount.trim() === '' ? NaN : parseInt(ticketCount);
       if (isNaN(parsedPrice) || isNaN(parsedCount)) {
+        alert("Invalid price or ticket count")
         throw new Error('Invalid price or ticket count');
       }
       await contract.methods.createEvent(eventName, date, parsedPrice, parsedCount).send({ from: accounts[0] });
@@ -66,11 +69,11 @@ function App() {
       setNextId(parseInt(newNextId)); // Update the nextId state
       const eventId = newNextId - 1; // Calculate the ID of the created event
       setEventId(eventId); // Update the eventId state
-      alert('Event created successfully!');
+      alert('Event created successfully! 🥳');
       console.log(nextId);
     } catch (error) {
       console.error('Error creating event:', error);
-      alert('Failed to create event. Please check the console for details.');
+      alert('Failed to create event. Please check the console for details. 😟');
     }
   };
 
@@ -81,7 +84,7 @@ function App() {
       const _event = await contract.methods.events(eventId).call(); // Fetch event details from the contract
       const totalPrice = _event.price * ticketQuantity;
       await contract.methods.buyTicket(eventId, ticketQuantity).send({ from: accounts[0], value: totalPrice });
-      alert('Ticket(s) purchased successfully!');
+      alert('Ticket(s) purchased successfully! 🥳');
     } catch (error) {
       console.error('Error buying ticket:', error);
       alert('Failed to buy ticket. Please check the console for details.');
@@ -103,7 +106,7 @@ function App() {
         gas: Math.round(gasEstimate * 1.1),
       };
       await contract.methods.transferTicket(eventId, ticketQuantity, transferTo).send(txOptions);
-      alert('Ticket(s) transferred successfully!');
+      alert('Ticket(s) transferred successfully! 🎉');
     } catch (error) {
       console.error('Error transferring ticket:', error);
       alert('Failed to transfer ticket. Please check the console for details.');
@@ -124,31 +127,68 @@ function App() {
   };
 
   return (
-    <div className="App ">
-      <h1 className="">Event Management DApp</h1>
-      <div className="createevt-container">
-        <h2 className="">Create Event</h2>
-        <input className="" type="text" placeholder="Event Name" onChange={(e) => setEventName(e.target.value)} />
-        <input className="" type="datetime-local" onChange={(e) => setEventDate(e.target.value)} />
-        <input className="" type="number" pattern='\d*' placeholder="Price (in Wei)" onChange={(e) => setEventPrice(e.target.value)} />
-        <input className="" type="number" pattern='\d*' placeholder="Ticket Count" onChange={(e) => setTicketCount(e.target.value)} />
-        <button className="" onClick={createEvent}>Create Event</button>
-      </div>
-      <div className="buyticket-container ">
-        <h2 className="">Buy Ticket</h2>
-        <input className="" type="number" placeholder="Event ID" onChange={handleEventIdChange} />
-        <input className="" type="number" placeholder="Quantity" onChange={handleTicketQuantityChange} />
-        <button className="" onClick={buyTicket}>Buy Ticket</button>
-      </div>
-      <div className="transfer-container">
-        <h2 className="">Transfer Ticket</h2>
-        <input className="" type="number" placeholder="Event ID" onChange={handleEventIdChange} />
-        <input className="" type="number" placeholder="Quantity" onChange={handleTicketQuantityChange} />
-        <input className="" type="text" placeholder="Transfer To Address" onChange={handleTransferToChange} />
-        <button className="" onClick={transferTicket}>Transfer Ticket</button>
+    <div className="bg-indigo-100 min-h-screen flex justify-center items-center">
+      
+      <div className="w-full max-w-2xl p-16">
+        <h1 className="text-3xl font-bold underline text-center mb-6">Event Management DApp</h1>
+        <div className="createevt-container">
+          <h2 className="text-2xl font-semibold mb-4">Create Event</h2>
+          <div className="flex mb-4">
+            <label className="w-24 text-right mr-4">Event Name:</label>
+            <input className="flex-1 border border-gray-400 p-2 rounded" type="text" placeholder="Event Name" onChange={(e) => setEventName(e.target.value)} />
+          </div>
+          <div className="flex mb-4">
+            <label className="w-24 text-right mr-4">Event Date:</label>
+            <input className="flex-1 border border-gray-400 p-2 rounded" type="datetime-local" onChange={(e) => setEventDate(e.target.value)} />
+          </div>
+          <div className="flex mb-4">
+            <label className="w-24 text-right mr-4">Price (in Wei):</label>
+            <input className="flex-1 border border-gray-400 p-2 rounded" type="number" pattern='\d*' placeholder="Price (in Wei)" onChange={(e) => setEventPrice(e.target.value)} />
+          </div>
+          <div className="flex mb-4">
+            <label className="w-24 text-right mr-4">Ticket Count:</label>
+            <input className="flex-1 border border-gray-400 p-2 rounded" type="number" pattern='\d*' placeholder="Ticket Count" onChange={(e) => setTicketCount(e.target.value)} />
+          </div>
+          <div className="flex justify-center">
+            <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600" onClick={createEvent}>Create Event</button>
+          </div>
+        </div>
+        <div className="buyticket-container flex flex-col align-middle justify-center mt-8">
+          <h2 className="text-2xl font-semibold mb-4">Buy Ticket</h2>
+          <div className="flex mb-4">
+            <label className="w-24 text-right mr-4">Event ID:</label>
+            <input className="flex-1 border border-gray-400 p-2 rounded" type="number" placeholder="Event ID" onChange={handleEventIdChange} />
+          </div>
+          <div className="flex mb-4">
+            <label className="w-24 text-right mr-4">Quantity:</label>
+            <input className="flex-1 border border-gray-400 p-2 rounded" type="number" placeholder="Quantity" onChange={handleTicketQuantityChange} />
+          </div>
+          <div className="flex justify-center mt-4">
+            <button className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600" onClick={buyTicket}>Buy Ticket</button>
+          </div>
+        </div>
+        <div className="transfer-container mt-8">
+          <h2 className="text-2xl font-semibold mb-4">Transfer Ticket</h2>
+          <div className="flex mb-4">
+            <label className="w-24 text-right mr-4">Event ID:</label>
+            <input className="flex-1 border border-gray-400 p-2 rounded" type="number" placeholder="Event ID" onChange={handleEventIdChange} />
+          </div>
+          <div className="flex mb-4">
+            <label className="w-24 text-right mr-4">Quantity:</label>
+            <input className="flex-1 border border-gray-400 p-2 rounded" type="number" placeholder="Quantity" onChange={handleTicketQuantityChange} />
+          </div>
+          <div className="flex mb-4">
+            <label className="w-24 text-right mr-4">Transfer To:</label>
+            <input className="flex-1 border border-gray-400 p-2 rounded" type="text" placeholder="Transfer To Address" onChange={handleTransferToChange} />
+          </div>
+          <div className="flex justify-center mt-4">
+            <button className="bg-purple-500 text-white py-2 px-4 rounded hover:bg-purple-600" onClick={transferTicket}>Transfer Ticket</button>
+          </div>
+        </div>
       </div>
     </div>
   );
+
 }
 
 export default App;
