@@ -1,5 +1,3 @@
-// App.jsx
-
 import React, { useState, useEffect } from 'react';
 import Web3 from 'web3';
 import EventContract from './contracts/EventContract.json';
@@ -16,6 +14,7 @@ function App() {
   const [eventId, setEventId] = useState('');
   const [ticketQuantity, setTicketQuantity] = useState('');
   const [transferTo, setTransferTo] = useState('');
+  const [nextId, setNextId] = useState(0); // Initialize nextId state
 
   useEffect(() => {
     async function loadBlockchainData() {
@@ -30,6 +29,7 @@ function App() {
       }
       else {
         console.log('No Ethereum browser detected. You should consider trying MetaMask.');
+        // alert("No ethereum browser detected. Please install MetaMask to get started.")
       }
 
       if (web3) {
@@ -43,6 +43,10 @@ function App() {
           deployedNetwork && deployedNetwork.address,
         );
         setContract(contract);
+
+        // Fetch and set initial nextId value
+        const id = await contract.methods.nextId().call();
+        setNextId(parseInt(id));
       }
     }
     loadBlockchainData();
@@ -52,21 +56,24 @@ function App() {
     if (!contract) return;
     try {
       const date = (new Date(eventDate)).getTime() / 1000; // Convert eventDate to Unix timestamp
-      // const parsedPrice = parseInt(eventPrice);
-      // const parsedCount = parseInt(ticketCount);
-      const parsedPrice = isNaN(eventPrice) || eventPrice.trim() === '' ? NaN : parseInt(eventPrice)
-      const parsedCount = isNaN(ticketCount) || ticketCount.trim() === '' ? NaN : parseInt(ticketCount)
+      const parsedPrice = isNaN(eventPrice) || eventPrice.trim() === '' ? NaN : parseInt(eventPrice);
+      const parsedCount = isNaN(ticketCount) || ticketCount.trim() === '' ? NaN : parseInt(ticketCount);
       if (isNaN(parsedPrice) || isNaN(parsedCount)) {
         throw new Error('Invalid price or ticket count');
       }
       await contract.methods.createEvent(eventName, date, parsedPrice, parsedCount).send({ from: accounts[0] });
+      const newNextId = await contract.methods.nextId().call(); // Get the updated nextId
+      setNextId(parseInt(newNextId)); // Update the nextId state
+      const eventId = newNextId - 1; // Calculate the ID of the created event
+      setEventId(eventId); // Update the eventId state
       alert('Event created successfully!');
-      console.log(eventId, eventName, date, parsedPrice, parsedCount)
+      console.log(nextId);
     } catch (error) {
       console.error('Error creating event:', error);
       alert('Failed to create event. Please check the console for details.');
     }
   };
+
 
   const buyTicket = async () => {
     if (!contract || !eventId || !ticketQuantity) return;
@@ -84,7 +91,18 @@ function App() {
   const transferTicket = async () => {
     if (!contract || !eventId || !ticketQuantity || !transferTo) return;
     try {
-      await contract.methods.transferTicket(eventId, ticketQuantity, transferTo).send({ from: accounts[0] });
+      const ticketsOwned = await contract.methods.tickets(accounts[0], eventId).call();
+      if (ticketsOwned < ticketQuantity) {
+        alert('Insufficient tickets owned.');
+        return;
+      }
+
+      const gasEstimate = await contract.methods.transferTicket(eventId, ticketQuantity, transferTo).estimateGas({ from: accounts[0] });
+      const txOptions = {
+        from: accounts[0],
+        gas: Math.round(gasEstimate * 1.1),
+      };
+      await contract.methods.transferTicket(eventId, ticketQuantity, transferTo).send(txOptions);
       alert('Ticket(s) transferred successfully!');
     } catch (error) {
       console.error('Error transferring ticket:', error);
@@ -94,7 +112,7 @@ function App() {
 
   const handleEventIdChange = (e) => {
     setEventId(e.target.value);
-    console.log(setEventId)
+    console.log(nextId)
   };
 
   const handleTicketQuantityChange = (e) => {
@@ -106,28 +124,28 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <h1>Event Management DApp</h1>
-      <div className='createevt-container' >
-        <h2>Create Event</h2>
-        <input type="text" placeholder="Event Name" onChange={(e) => setEventName(e.target.value)} />
-        <input type="datetime-local" onChange={(e) => setEventDate(e.target.value)} />
-        <input type="number" pattern='\d*' placeholder="Price (in Wei)" onChange={(e) => setEventPrice(e.target.value)} />
-        <input type="number" pattern='\d*' placeholder="Ticket Count" onChange={(e) => setTicketCount(e.target.value)} />
-        <button onClick={createEvent}>Create Event</button>
+    <div className="App bg-gray-200 min-h-screen py-12 px-4">
+      <h1 className="text-3xl font-bold text-center mb-8">Event Management DApp</h1>
+      <div className="createevt-container bg-white rounded-md shadow-md p-6 mb-8">
+        <h2 className="text-lg font-semibold mb-4">Create Event</h2>
+        <input className="input-field mb-4" type="text" placeholder="Event Name" onChange={(e) => setEventName(e.target.value)} />
+        <input className="input-field mb-4" type="datetime-local" onChange={(e) => setEventDate(e.target.value)} />
+        <input className="input-field mb-4" type="number" pattern='\d*' placeholder="Price (in Wei)" onChange={(e) => setEventPrice(e.target.value)} />
+        <input className="input-field mb-4" type="number" pattern='\d*' placeholder="Ticket Count" onChange={(e) => setTicketCount(e.target.value)} />
+        <button className="btn-primary" onClick={createEvent}>Create Event</button>
       </div>
-      <div className='buyticket-container' >
-        <h2>Buy Ticket</h2>
-        <input type="number" placeholder="Event ID" onChange={handleEventIdChange} />
-        <input type="number" placeholder="Quantity" onChange={handleTicketQuantityChange} />
-        <button onClick={buyTicket}>Buy Ticket</button>
+      <div className="buyticket-container bg-white rounded-md shadow-md p-6 mb-8">
+        <h2 className="text-lg font-semibold mb-4">Buy Ticket</h2>
+        <input className="input-field mb-4" type="number" placeholder="Event ID" onChange={handleEventIdChange} />
+        <input className="input-field mb-4" type="number" placeholder="Quantity" onChange={handleTicketQuantityChange} />
+        <button className="btn-primary" onClick={buyTicket}>Buy Ticket</button>
       </div>
-      <div className='transfer-container' >
-        <h2>Transfer Ticket</h2>
-        <input type="number" placeholder="Event ID" onChange={handleEventIdChange} />
-        <input type="number" placeholder="Quantity" onChange={handleTicketQuantityChange} />
-        <input type="text" placeholder="Transfer To Address" onChange={handleTransferToChange} />
-        <button onClick={transferTicket}>Transfer Ticket</button>
+      <div className="transfer-container bg-white rounded-md shadow-md p-6">
+        <h2 className="text-lg font-semibold mb-4">Transfer Ticket</h2>
+        <input className="input-field mb-4" type="number" placeholder="Event ID" onChange={handleEventIdChange} />
+        <input className="input-field mb-4" type="number" placeholder="Quantity" onChange={handleTicketQuantityChange} />
+        <input className="input-field mb-4" type="text" placeholder="Transfer To Address" onChange={handleTransferToChange} />
+        <button className="btn-primary" onClick={transferTicket}>Transfer Ticket</button>
       </div>
     </div>
   );
