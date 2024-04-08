@@ -127,9 +127,9 @@ function App() {
   };
 
   return (
-    <div className="p-20 bg-gradient-to-br from-indigo-400 to-purple-500 min-h-screen flex justify-center items-center">
+    <div className="p-20 bg-gray-200 min-h-screen flex justify-center items-center">
 
-      <div className="w-full max-w-3xl p-10 bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg rounded-lg shadow-lg">
+      <div className="w-full max-w-3xl p-10 bg-white rounded-lg shadow-lg">
         <h1 className="text-3xl font-bold underline text-center mb-8">Event Management DApp</h1>
         <div className="createevt-container mb-8">
           <h2 className="text-2xl font-semibold mb-4">Create Event</h2>
