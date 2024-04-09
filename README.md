@@ -42,9 +42,11 @@ To run this project locally, follow these steps:
 
     ```bash
     cd truffle
-
+    ```
+    ```bash
     truffle compile
-    
+    ```
+    ```bash
     truffle migrate
     ```
 
@@ -52,9 +54,11 @@ To run this project locally, follow these steps:
 
    ```bash
    cd client
-
+   ```
+   ```bash
    npx webpack
-
+   ``` 
+   ```bash 
    npm start
    ```
 
