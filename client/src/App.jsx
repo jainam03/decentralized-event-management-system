@@ -55,8 +55,8 @@ function App() {
   }, [web3]);
 
   const createEvent = async () => {
-    const web3 = new Web3(window.ethereum);
-    const parsedPriceInWei = web3.utils.toWei(eventPrice, 'ether');
+    // const web3 = new Web3(window.ethereum);
+    // const parsedPriceInWei = web3.utils.toWei(eventPrice, 'ether');
     if (!contract) return;
     try {
       const date = (new Date(eventDate)).getTime() / 1000; // Convert eventDate to Unix timestamp
@@ -66,7 +66,7 @@ function App() {
         alert("Invalid price or ticket count")
         throw new Error('Invalid price or ticket count');
       }
-      await contract.methods.createEvent(eventName, date, parsedPriceInWei, parsedCount).send({ from: accounts[0] });
+      await contract.methods.createEvent(eventName, date, parsedPrice, parsedCount).send({ from: accounts[0] });
       const newNextId = await contract.methods.nextId().call(); // Get the updated nextId
       setNextId(parseInt(newNextId)); // Update the nextId state
       const eventId = newNextId - 1; // Calculate the ID of the created event
@@ -146,7 +146,7 @@ function App() {
             </div>
             <div className="flex items-center">
               <label className="w-24 text-right mr-4">Price (in Wei):</label>
-              <input className="flex-1 border border-gray-400 p-2 rounded" type="number" pattern='\d*' placeholder="Price (in Wei)" onChange={(e) => setEventPrice(e.target.value)} />
+              <input className="flex-1 border border-gray-400 p-2 rounded" type="number" pattern='\d*' placeholder="Price" onChange={(e) => setEventPrice(e.target.value)} />
             </div>
             <div className="flex items-center">
               <label className="w-24 text-right mr-4">Ticket Count:</label>
