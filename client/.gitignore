@@ -23,3 +23,5 @@
 
 # Miscellaneous
 .DS_Store
+
+./src/contracts/EventContract.json
