@@ -26,7 +26,6 @@ function App() {
           setWeb3(web3);
         } catch (error) {
           console.error('User denied account access');
-          alert("User denied access")
         }
       }
       else {
@@ -145,7 +144,7 @@ function App() {
               <input className="flex-1 border border-gray-400 p-2 rounded " type="datetime-local" onChange={(e) => setEventDate(e.target.value)} />
             </div>
             <div className="flex items-center">
-              <label className="w-24 text-right mr-4">Price (in Wei):</label>
+              <label className="w-24 text-right mr-4">Price:</label>
               <input className="flex-1 border border-gray-400 p-2 rounded" type="number" pattern='\d*' placeholder="Price" onChange={(e) => setEventPrice(e.target.value)} />
             </div>
             <div className="flex items-center">
