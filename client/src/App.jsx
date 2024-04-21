@@ -27,8 +27,7 @@ function App() {
         } catch (error) {
           console.error('User denied account access');
         }
-      }
-      else {
+      } else {
         console.log('No Ethereum browser detected. You should consider trying MetaMask.');
         // alert("No ethereum browser detected. Please install MetaMask to get started.")
       }
@@ -54,8 +53,6 @@ function App() {
   }, [web3]);
 
   const createEvent = async () => {
-    // const web3 = new Web3(window.ethereum);
-    // const parsedPriceInWei = web3.utils.toWei(eventPrice, 'ether');
     if (!contract) return;
     try {
       const date = (new Date(eventDate)).getTime() / 1000; // Convert eventDate to Unix timestamp
@@ -83,8 +80,8 @@ function App() {
     if (!contract || !eventId || !ticketQuantity) return;
     try {
       const _event = await contract.methods.events(eventId).call(); // Fetch event details from the contract
-      const totalPrice = _event.price * ticketQuantity;
-      await contract.methods.buyTicket(eventId, ticketQuantity).send({ from: accounts[0], value: totalPrice });
+      const totalPriceInWei = _event.price * ticketQuantity;
+      await contract.methods.buyTicket(eventId, ticketQuantity).send({ from: accounts[0], value: totalPriceInWei });
       alert('Ticket(s) purchased successfully! 🥳');
     } catch (error) {
       console.error('Error buying ticket:', error);
@@ -101,12 +98,7 @@ function App() {
         return;
       }
 
-      const gasEstimate = await contract.methods.transferTicket(eventId, ticketQuantity, transferTo).estimateGas({ from: accounts[0] });
-      const txOptions = {
-        from: accounts[0],
-        gas: Math.round(gasEstimate * 1.1),
-      };
-      await contract.methods.transferTicket(eventId, ticketQuantity, transferTo).send(txOptions);
+      await contract.methods.transferTicket(eventId, ticketQuantity, transferTo).send({ from: accounts[0] });
       alert('Ticket(s) transferred successfully! 🎉');
     } catch (error) {
       console.error('Error transferring ticket:', error);

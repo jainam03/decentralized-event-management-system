@@ -37,28 +37,36 @@ contract EventContract {
 
     function buyTicket(uint id, uint quantity) external payable {
         require(events[id].date != 0, "Event does not exist");
-        require(block.timestamp < events[id].date, "Event has already occurred");
+        require(
+            block.timestamp < events[id].date,
+            "Event has already occurred"
+        );
 
         Event storage _event = events[id];
-        uint totalCost = _event.price * quantity;
+        uint totalCostInWei = _event.price * quantity;
 
-        require(msg.value >= totalCost, "Insufficient Ether sent");
-        require(_event.ticketRemain >= quantity, "Not enough tickets available");
+        require(msg.value >= totalCostInWei, "Insufficient Ether sent");
+        require(
+            _event.ticketRemain >= quantity,
+            "Not enough tickets available"
+        );
 
         _event.ticketRemain -= quantity;
         tickets[msg.sender][id] += quantity;
     }
 
     function transferTicket(uint256 id, uint256 quantity, address to) external {
-    require(events[id].date != 0, "Event does not exist");
-    require(block.timestamp < events[id].date, "Event has already occurred");
-    require(tickets[msg.sender][id] >= quantity, "Insufficient tickets owned");
+        require(events[id].date != 0, "Event does not exist");
+        require(
+            block.timestamp < events[id].date,
+            "Event has already occurred"
+        );
+        require(
+            tickets[msg.sender][id] >= quantity,
+            "Insufficient tickets owned"
+        );
 
-    uint256 senderTickets = tickets[msg.sender][id];
-    require(senderTickets >= quantity, "Insufficient tickets owned");
-
-    // Transfer the tickets
-    tickets[msg.sender][id] -= quantity;
-    tickets[to][id] += quantity;
-}
+        tickets[msg.sender][id] -= quantity;
+        tickets[to][id] += quantity;
+    }
 }
