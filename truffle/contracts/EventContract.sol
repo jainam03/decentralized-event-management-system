@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unlicense
-pragma solidity >=0.5.0 <0.9.0;
+pragma solidity ^0.8.18;
 
 contract EventContract {
     struct Event {
@@ -55,7 +55,7 @@ contract EventContract {
         tickets[msg.sender][id] += quantity;
     }
 
-    function transferTicket(uint256 id, uint256 quantity, address to) external {
+    function transferTicket(uint id, uint quantity, address to) external {
         require(events[id].date != 0, "Event does not exist");
         require(
             block.timestamp < events[id].date,
