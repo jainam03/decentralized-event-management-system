@@ -16,7 +16,6 @@ yarn.lock
 .idea/
 
 # Compiled output
-*.js
 *.css
 *.map
 
