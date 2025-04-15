@@ -9499,12 +9499,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0xAaf06eBf310863717a27a4051fBCd6C16d40CbcD",
-      "transactionHash": "0x9a1ce16b0ea48c617abf828f922e5b23b4758b4e8170878c3ecbbd1aa9b324aa"
+      "address": "0xa58D242eF0C30F8039DeD0A69a0500F88ddf67B3",
+      "transactionHash": "0x64da1523ef1ce2b034905f5487fa9e333b22561f773f7fd1d26be08f2da8b2b3"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2025-02-01T14:11:54.518Z",
+  "updatedAt": "2025-04-15T14:39:06.379Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
