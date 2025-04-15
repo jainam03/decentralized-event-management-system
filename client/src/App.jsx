@@ -50,24 +50,88 @@ function App() {
   }, [web3]);
 
   const createEvent = async () => {
-    if (!contract) return;
+    if (!contract) {
+      alert("Contract not initialized");
+      return;
+    }
+
     try {
-      const date = (new Date(eventDate)).getTime() / 1000; // Convert eventDate to Unix timestamp
-      const parsedPrice = isNaN(eventPrice) || eventPrice.trim() === '' ? NaN : parseInt(eventPrice);
-      const parsedCount = isNaN(ticketCount) || ticketCount.trim() === '' ? NaN : parseInt(ticketCount);
-      if (isNaN(parsedPrice) || isNaN(parsedCount)) {
-        alert("Invalid price or ticket count");
-        throw new Error('Invalid price or ticket count');
+      // Validate event name
+      if (!eventName || eventName.trim() === '') {
+        alert("Event name is required");
+        return;
       }
-      await contract.methods.createEvent(eventName, date, parsedPrice, parsedCount).send({ from: accounts[0] });
-      const newNextId = await contract.methods.nextId().call();
-      const createdEventId = parseInt(newNextId) - 1;
-      setEventId(createdEventId);
-      setCreateEventId(createdEventId);
-      alert(`Event created successfully! Event ID: ${createdEventId}`);
+
+      // Validate event date
+      if (!eventDate) {
+        alert("Event date is required");
+        return;
+      }
+
+      const date = Math.floor(new Date(eventDate).getTime() / 1000);
+      if (isNaN(date) || date <= 0) {
+        alert("Invalid date format");
+        return;
+      }
+
+      // Validate price and ticket count
+      const parsedPrice = parseInt(eventPrice);
+      const parsedCount = parseInt(ticketCount);
+
+      if (isNaN(parsedPrice) || parsedPrice <= 0) {
+        alert("Price must be a positive number");
+        return;
+      }
+
+      if (isNaN(parsedCount) || parsedCount <= 0) {
+        alert("Ticket count must be a positive number");
+        return;
+      }
+
+      // Prepare transaction parameters
+      const eventData = contract.methods.createEvent(
+        eventName,
+        date, // pass as number
+        parsedPrice, // pass as number
+        parsedCount // pass as number
+      );
+
+      // Estimate gas
+      const gas = await eventData.estimateGas({ from: accounts[0] });
+      
+      // Convert gas to string to avoid BigInt mixing issues
+      const gasWithBuffer = Math.floor(Number(gas) * 1.2).toString();
+
+      // Send transaction with estimated gas
+      const result = await eventData.send({
+        from: accounts[0],
+        gas: gasWithBuffer
+      });
+
+      if (result.status) {
+        const newNextId = await contract.methods.nextId().call();
+        const createdEventId = parseInt(newNextId) - 1;
+        setEventId(createdEventId);
+        setCreateEventId(createdEventId);
+        alert(`Event created successfully! Event ID: ${createdEventId}`);
+        
+        // Clear form fields after successful creation
+        setEventName('');
+        setEventDate('');
+        setEventPrice('');
+        setTicketCount('');
+      } else {
+        throw new Error('Transaction failed');
+      }
     } catch (error) {
       console.error('Error creating event:', error);
-      alert(`Failed to create event: ${error.message}`);
+      if (error.message.includes('gas')) {
+        alert('Transaction failed: Insufficient gas or gas estimation failed. Please try again with different values.');
+      } else if (error.message.includes('rejected')) {
+        alert('Transaction was rejected. Please check your wallet and try again.');
+      } else {
+        alert(`Failed to create event: ${error.message}`);
+      }
     }
   };
 
@@ -109,17 +173,17 @@ function App() {
 
   const handleEventIdChange = (e) => {
     setEventId(e.target.value);
-    console.log(e.target.value);
+    // console.log(e.target.value);
   };
 
   const handleTicketQuantityChange = (e) => {
     setTicketQuantity(e.target.value);
-    console.log(e.target.value);
+    // console.log(e.target.value);
   };
 
   const handleTransferToChange = (e) => {
     setTransferTo(e.target.value);
-    console.log(e.target.value);
+    // console.log(e.target.value);
   };
 
   return (

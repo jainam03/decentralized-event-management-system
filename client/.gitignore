@@ -23,3 +23,6 @@
 
 # Miscellaneous
 .DS_Store
+
+# Contract artifacts
+/contracts/eventcontracts.json
